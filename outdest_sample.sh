@@ -1,4 +1,10 @@
 #PDF
 DEFAULT_LAST_PDF_SRC="$HOME/Downloads"
 DEFAULT_DEST="$HOME/Desktop/temp"
-# Blur and copy to sample
+
+
+#GIF
+GIF_DESTINATION="$HOME/Documents/gif"
+COPY_TO_CLIPBOARD="Y"
+GIF_OUTNAME="out"
+MP3_OUTNAME="out"
