@@ -1,5 +1,10 @@
 # used-utils
-Scripts I used that can be utils
+Scripts that were useful for me.
 
 # TODO
 audio
+
+# Packages MAC
+- `pdfunite` - Merge multiple PDF files into one PDF file.
+- `ffmpeg` - A complete, cross-platform solution to record, convert and stream audio,gif and video.
+- `yt-dlp` - A youtube-dl fork with additional features and fixes.

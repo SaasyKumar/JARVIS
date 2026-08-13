@@ -2,6 +2,7 @@
 
 # Usage:
 # ./makegif.sh "https://example.com/video.mp4"
+echo "VPN: $VPN_STATUS"
 
 INPUTURL="${1%%\?*}"
 DEST="${GIF_DESTINATION:-.}"
@@ -117,5 +118,6 @@ fi
 
 rm -rf "$TMPDIR"
 
+echo "$INPUTURL"
 echo "created from: "
 echo "${SEGMENTS[@]}"

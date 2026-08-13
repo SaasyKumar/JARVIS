@@ -1,12 +1,15 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/imports.sh"
 
-
 options=("PDF" "Download" "video" "audio" "GIF" "git" )
-
 choice=$(printf '%s\n' "${!options[@]}" | while read i; do
     echo "$((i+1)). ${options[$i]}"
-done | fzf)
+done | fzf\
+        --prompt="JARVIS > " \
+        --pointer="➤" \
+        --marker="◆" \
+        --height=30% \
+        --layout=reverse)
 index="${choice%%.*}"
 
 case "$index" in

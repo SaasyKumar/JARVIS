@@ -3,7 +3,12 @@ echo "$SCRIPT_DIR"
 WITH_AUTH="N"
 choice=$(printf '%s\n' "${!options[@]}" | while read i; do
     echo "$((i+1)). ${options[$i]}"
-done | fzf)
+done | fzf\
+        --prompt="GIF > " \
+        --pointer="➤" \
+        --marker="◆" \
+        --height=30% \
+        --layout=reverse)
 index="${choice%%.*}"
 
 case "$index" in
