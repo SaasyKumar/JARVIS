@@ -43,7 +43,7 @@ def upscale_video(
     output_file=None,
     scale=2,
     model_name=None,
-    tile=256,
+    tile=512,
     tile_pad=10,
     pre_pad=0,
     device_name="auto",
