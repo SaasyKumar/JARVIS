@@ -4,7 +4,7 @@ This folder consist of output(stdout) shell script files that can be used while 
 # Colors
 Use these color and font style varibales to add styles in output text. Example given in color_test.sh for both adding style and removing it for particular part. These works same as in JavaScript console log styles.
 
-![alt text](../images/color.png)
+![alt text](./color.png)
 
 # Learnings
 While importing varibale using `soucre` method using relative path causes error based on from which path the script is executed.
