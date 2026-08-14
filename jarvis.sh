@@ -1,7 +1,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/imports.sh"
 
-options=("PDF" "Download" "video" "audio" "GIF" "git" )
+options=("PDF" "Download" "video" "audio" "Image" "GIF" "git" )
 choice=$(printf '%s\n' "${!options[@]}" | while read i; do
     echo "$((i+1)). ${options[$i]}"
 done | fzf\
@@ -26,6 +26,9 @@ case "$index" in
         source "$SCRIPT_DIR/shell/audio/index.sh"
         ;;
     5)
+        source "$SCRIPT_DIR/shell/image/index.sh"
+        ;;
+    6)
         source "$SCRIPT_DIR/shell/gif/index.sh"
         ;;
     *)
