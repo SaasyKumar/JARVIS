@@ -1,4 +1,4 @@
-options=("offline video" "online mp4" "online with auth param" )
+options=("offline video" "online mp4" "online with auth param" "from images")
 echo "$SCRIPT_DIR"
 WITH_AUTH="N"
 choice=$(printf '%s\n' "${!options[@]}" | while read i; do
@@ -21,6 +21,9 @@ case "$index" in
     3)
         WITH_AUTH="Y"
         source "$SCRIPT_DIR/shell/gif/mp4.sh"
+        ;;
+    4)
+        source "$SCRIPT_DIR/shell/gif/image.sh"
         ;;
     *)
         echo "Invalid choice"
