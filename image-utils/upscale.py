@@ -38,13 +38,13 @@ def get_default_device():
     return torch.device("cpu")
 
 
-def upscale_video(
+def upscale_image(
     input_file,
     output_file=None,
-    scale=2,
+    scale=1,
     model_name=None,
-    tile=512,
-    tile_pad=10,
+    tile=0,
+    tile_pad=32,
     pre_pad=0,
     device_name="auto",
     half=False,
@@ -102,25 +102,14 @@ def upscale_video(
         )
         scale = 4
 
-    cap = cv2.VideoCapture(str(input_path))
-    if not cap.isOpened():
-        raise RuntimeError(f"Could not open video file: {input_path}")
-
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
-    print(f"--- Video Upscaling Configuration ---")
+    print(f"--- Image Upscaling Configuration ---")
     print(f"Input:       {input_path}")
     print(f"Output:      {output_path}")
-    print(f"Resolution:  {width}x{height} -> {width * scale}x{height * scale}")
-    print(f"FPS:         {fps:.2f}")
-    print(f"Frames:      {frame_count}")
     print(f"Model:       {model_name} (scale: {scale}x)")
     print(f"Device:      {device}")
     print(f"--------------------------------------")
 
+    input_image = cv2.imread(input_path, cv2.IMREAD_COLOR)
     upsampler = RealESRGANer(
         scale=scale,
         model_path=model_path,
@@ -131,71 +120,20 @@ def upscale_video(
         half=half,
         device=device,
     )
+    output_img, _ = upsampler.enhance(input_image, outscale=scale)
+    output_path = input_path.with_name(
+        f"{input_path.stem}_upscaled{input_path.suffix}"
+    )
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_dir_path = Path(temp_dir)
-        frame_dir = temp_dir_path / "frames"
-        frame_dir.mkdir()
-
-        frame_number = 0
-        pbar = tqdm(total=frame_count, desc="Upscaling frames", unit="frame")
-
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            output, _ = upsampler.enhance(frame, outscale=scale)
-
-            frame_path = frame_dir / f"{frame_number:08d}.png"
-            cv2.imwrite(str(frame_path), output)
-
-            frame_number += 1
-            pbar.update(1)
-
-        pbar.close()
-        cap.release()
-
-        print("\nEncoding video with ffmpeg...")
-
-        subprocess.run(
-            [
-                "ffmpeg",
-                "-y",
-                "-framerate",
-                str(fps),
-                "-i",
-                str(frame_dir / "%08d.png"),
-                "-i",
-                str(input_path),
-                "-map",
-                "0:v:0",
-                "-map",
-                "1:a?",
-                "-c:v",
-                "libx264",
-                "-preset",
-                "medium",
-                "-crf",
-                "18",
-                "-pix_fmt",
-                "yuv420p",
-                "-c:a",
-                "copy",
-                "-shortest",
-                str(output_path),
-            ],
-            check=True,
-        )
-
-    print(f"\nSuccessfully upscaled video!")
+    cv2.imwrite(output_path, output_img)
+    print(f"\nSuccessfully upscaled Image")
     print(f"Output saved to: {output_path}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AI Video Upscaling using Real-ESRGAN")
-    parser.add_argument("input", help="Path to input video file (e.g. clip_1.mp4)")
-    parser.add_argument("-o", "--output", help="Path to output video file (optional)")
+    parser = argparse.ArgumentParser(description="AI Image Upscaling using Real-ESRGAN")
+    parser.add_argument("input", help="Path to input Image file (e.g. image.jpeg)")
+    parser.add_argument("-o", "--output", help="Path to output image file (optional)")
     parser.add_argument(
         "-s",
         "--scale",
@@ -245,7 +183,7 @@ def main():
 
     args = parser.parse_args()
 
-    upscale_video(
+    upscale_image(
         input_file=args.input,
         output_file=args.output,
         scale=args.scale,
